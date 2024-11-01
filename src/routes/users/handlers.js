@@ -91,6 +91,9 @@ async function deleteUser(req, res) {
 async function getFoodsByUserId(req, res) {
   try {
     const { userId } = req.params;
+    if (req.user.userId !== parseInt(userId, 10)) {
+      return res.status(403).json({ message: 'Access forbidden: You cannot view other users\' data.' });
+    }
     const foods = await db.food.findMany({
       where: { userId: parseInt(userId) },
     });
@@ -111,7 +114,9 @@ async function getFoodsByUserId(req, res) {
 async function getCalculationResultsByUserId(req, res) {
   try {
     const { userId } = req.params;
-
+    if (req.user.userId !== parseInt(userId, 10)) {
+      return res.status(403).json({ message: 'Access forbidden: You cannot view other users\' data.' });
+    }
     const results = await db.calculationResult.findMany({
       where: { userId: parseInt(userId) },
     });

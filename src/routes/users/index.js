@@ -29,8 +29,8 @@ userRoutes.post('/', createUser);
 userRoutes.put('/:id', authenticateToken, updateUser);
 userRoutes.delete('/:id', authenticateToken, deleteUser);
 
-userRoutes.get('/:userId/foods', getFoodsByUserId);
-userRoutes.get('/:userId/calculations', getCalculationResultsByUserId);
+userRoutes.get('/:userId/foods', authenticateToken, getFoodsByUserId);
+userRoutes.get('/:userId/calculations', authenticateToken, getCalculationResultsByUserId);
 userRoutes.get('/protected', getProtectedData);
 
 module.exports = userRoutes;
