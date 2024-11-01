@@ -1,6 +1,7 @@
 const express = require("express");
 const userRoutes = require('./routes/users');
 const foodRoutes = require('./routes/food');
+const calculationResultRoutes = require('./routes/calculations');
 require("dotenv").config();
 
 const app = express();
@@ -25,6 +26,7 @@ app.get("/", welcome);
 app.get("/api", api);
 app.use('/api/users', userRoutes);
 app.use('/api/food', foodRoutes);
+app.use('/api/calculation', calculationResultRoutes);
 
 
 app.listen(port, (err) => {

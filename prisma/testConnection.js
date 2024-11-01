@@ -25,6 +25,8 @@ async function main() {
         console.log("Foods with success:", foods);
         const users = await client.user.findMany();
         console.log("Users with success:", users);
+        const calculations = await client.calculationResult.findMany();
+        console.log("Calculation results with success:", calculations);
     } catch (error) {
         console.error("Error connecting to the database:", error);
     } finally {
