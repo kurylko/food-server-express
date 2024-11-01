@@ -23,7 +23,7 @@ const api = (req, res) => {
 
 app.get('/', welcome);
 app.get('/api', api);
-app.use('/api/users', userRoutes);
+app.use('/api/user', userRoutes);
 app.use('/api/food', foodRoutes);
 app.use('/api/calculation', calculationResultRoutes);
 
