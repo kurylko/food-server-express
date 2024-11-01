@@ -1,7 +1,9 @@
 # Server - Express
 
 ## Used technologies:
--Express
+- Express
+- Supabase (PostgreSQL)
+- Prisma / Prisma Client
 
 ## Development
 To start the development server run:
