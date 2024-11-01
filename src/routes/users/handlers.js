@@ -75,12 +75,33 @@ async function deleteUser(req, res) {
     }
 }
 
+async function getFoodsByUserId(req, res) {
+    try {
+        const { userId } = req.params;
+
+        const foods = await db.food.findMany({
+            where: { userId: parseInt(userId) },
+        });
+
+        if (foods.length === 0) {
+            return res.status(404).json({ message: "No food items found for this user." });
+        }
+
+        return res.status(200).json(foods);
+    } catch (error) {
+        console.error("Error retrieving foods by user ID:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+
 module.exports = {
     createUser,
     getAllUsers,
     getUserById,
     updateUser,
     deleteUser,
+    getFoodsByUserId,
 };
 
 
