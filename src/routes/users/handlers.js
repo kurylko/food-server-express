@@ -94,6 +94,25 @@ async function getFoodsByUserId(req, res) {
     }
 }
 
+async function getCalculationResultsByUserId(req, res) {
+    try {
+        const { userId } = req.params;
+
+        const results = await db.calculationResult.findMany({
+            where: { userId: parseInt(userId) },
+        });
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: "No calculation results found for this user." });
+        }
+
+        return res.status(200).json(results);
+    } catch (error) {
+        console.error("Error retrieving calculation results by user ID:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+}
+
 
 module.exports = {
     createUser,
@@ -102,6 +121,7 @@ module.exports = {
     updateUser,
     deleteUser,
     getFoodsByUserId,
+    getCalculationResultsByUserId,
 };
 
 
