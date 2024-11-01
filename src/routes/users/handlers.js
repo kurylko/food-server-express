@@ -14,7 +14,7 @@ async function getUserById(req, res) {
   const { id } = req.params;
   try {
     const user = await db.user.findUnique({
-      where: { id: parseInt(id) },
+      where: { id: id },
     });
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -47,7 +47,7 @@ async function updateUser(req, res) {
   const { id } = req.params;
   const { name, email } = req.body;
 
-  if (req.user.userId !== parseInt(id)) {
+  if (req.user.userId !== id) {
     return res
       .status(403)
       .json({ error: 'You do not have permission to update this user.' });
@@ -55,7 +55,7 @@ async function updateUser(req, res) {
 
   try {
     const updatedUser = await db.user.update({
-      where: { id: parseInt(id) },
+      where: { id: id },
       data: {
         name,
         email,
@@ -71,7 +71,7 @@ async function updateUser(req, res) {
 async function deleteUser(req, res) {
   const { id } = req.params;
 
-  if (req.user.userId !== parseInt(id)) {
+  if (req.user.userId !== id) {
     return res
       .status(403)
       .json({ error: 'You do not have permission to delete this user.' });
@@ -79,7 +79,7 @@ async function deleteUser(req, res) {
 
   try {
     await db.user.delete({
-      where: { id: parseInt(id) },
+      where: { id: id },
     });
     res.status(204).send();
   } catch (error) {
@@ -91,11 +91,11 @@ async function deleteUser(req, res) {
 async function getFoodsByUserId(req, res) {
   try {
     const { userId } = req.params;
-    if (req.user.userId !== parseInt(userId, 10)) {
+    if (req.user.userId !== userId) {
       return res.status(403).json({ message: 'Access forbidden: You cannot view other users\' data.' });
     }
     const foods = await db.food.findMany({
-      where: { userId: parseInt(userId) },
+      where: { userId: userId },
     });
 
     if (foods.length === 0) {
@@ -114,11 +114,11 @@ async function getFoodsByUserId(req, res) {
 async function getCalculationResultsByUserId(req, res) {
   try {
     const { userId } = req.params;
-    if (req.user.userId !== parseInt(userId, 10)) {
+    if (req.user.userId !== userId) {
       return res.status(403).json({ message: 'Access forbidden: You cannot view other users\' data.' });
     }
     const results = await db.calculationResult.findMany({
-      where: { userId: parseInt(userId) },
+      where: { userId: userId },
     });
 
     if (results.length === 0) {
