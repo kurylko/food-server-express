@@ -14,7 +14,7 @@ async function getCalculationResultById(req, res) {
   const { id } = req.params;
   try {
     const result = await db.calculationResult.findUnique({
-      where: { id: parseInt(id) },
+      where: { id: id },
     });
     if (!result) {
       return res.status(404).json({ error: 'Calculation result is not found' });
@@ -52,7 +52,7 @@ async function deleteCalculationResult(req, res) {
   const { id } = req.params;
   try {
     await db.calculationResult.delete({
-      where: { id: parseInt(id) },
+      where: { id: id },
     });
     res.status(204).send();
   } catch (error) {

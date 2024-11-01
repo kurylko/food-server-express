@@ -14,7 +14,7 @@ async function getFoodById(req, res) {
   const { id } = req.params;
   try {
     const food = await db.food.findUnique({
-      where: { id: parseInt(id) },
+      where: { id: id },
     });
     if (!food) {
       return res.status(404).json({ error: 'Food not found' });
@@ -54,7 +54,7 @@ async function updateFood(req, res) {
     req.body;
   try {
     const updatedFood = await db.food.update({
-      where: { id: parseInt(id) },
+      where: { id: id },
       data: {
         foodName,
         fat,
@@ -75,7 +75,7 @@ async function deleteFood(req, res) {
   const { id } = req.params;
   try {
     await db.food.delete({
-      where: { id: parseInt(id) },
+      where: { id: id },
     });
     res.status(204).send();
   } catch (error) {
