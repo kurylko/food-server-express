@@ -1,62 +1,86 @@
-import db from "./../../db/index";
-import {NotFoundError} from "@prisma/client/runtime/edge";
+const db = require('./../../db/index');
 
-export async function getUsers() {
+async function getAllUsers(req, res) {
     try {
-        return await db.user.findMany({})
-    } catch (e) {
-        console.log(`Error fetching users ${e}`)
+        const users = await db.user.findMany();
+        res.status(200).json(users);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to fetch users' });
     }
 }
 
-export async function getUser(id) {
+async function getUserById(req, res) {
+    const { id } = req.params;
     try {
-        const food = await db.user.findUnique({where: {id: id}})
-        if (!food) {
-            throw new NotFoundError("User not found");
+        const user = await db.user.findUnique({
+            where: { id: parseInt(id) },
+        });
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
         }
-        return food;
-    } catch (e) {
-        console.log(`Error fetching user: ${e}`)
+        res.status(200).json(user);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to fetch user' });
     }
 }
 
-export async function createUser(options: {email, name, password }){
+async function createUser(req, res) {
+    const { name, email, password } = req.body;
     try {
-        const {email, name, password } = options;
-        return await db.user.create({data: {email, name, password } });
-    } catch (e) {
-        if (e instanceof Error) {
-            console.error(`Error creating a user: ${e.message}`);
-        } else {
-            console.error(`Unknown error creating a user: ${e}`);
-        }
-        console.log(`Error creating a user ${e}`)
-    }
-}
-
-export async function updateUser(id, options: { email?, name?, password?}) {
-    try {
-        const {email, name, password } = options;
-        return await db.user.update({
-            where: {id},
+        const newUser = await db.user.create({
             data: {
-                ...(email ? {email} : {}),
-                ...(name ? {name} : {}),
-                ...(password ? {password} : {}),
-            }
-        })
-    } catch (e) {
-        console.log(`Error updating user ${e}`)
+                name,
+                email,
+                password,
+            },
+        });
+        res.status(201).json(newUser);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to create user' });
     }
 }
 
-export async function deleteUser(options: { id }) {
+
+async function updateUser(req, res) {
+    const { id } = req.params;
+    const { name, email } = req.body; // Assuming you're updating name and email
     try {
-        const {id} = options;
-        return await db.user.delete({where: {id} })
-    } catch (e) {
-        console.log(`Error deleting user ${e}`)
+        const updatedUser = await db.user.update({
+            where: { id: parseInt(id) },
+            data: {
+                name,
+                email,
+            },
+        });
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to update user' });
     }
 }
+
+async function deleteUser(req, res) {
+    const { id } = req.params;
+    try {
+        await db.user.delete({
+            where: { id: parseInt(id) },
+        });
+        res.status(204).send(); // No content to send back
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to delete user' });
+    }
+}
+
+module.exports = {
+    createUser,
+    getAllUsers,
+    getUserById,
+    updateUser,
+    deleteUser,
+};
+
 

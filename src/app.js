@@ -1,8 +1,10 @@
 const express = require("express");
+const userRoutes = require('./routes/users');
+require("dotenv").config();
 
 const app = express();
 
-require("dotenv").config();
+app.use(express.json());
 
 const port = parseInt(process.env.EXPRESS_PORT ?? "5000", 10);
 
@@ -14,8 +16,14 @@ const welcome = (req, res) => {
     res.send("Welcome to food server");
 };
 
+const api = (req, res) => {
+    res.send("Welcome to food server APIs");
+};
+
 app.get("/", welcome);
-app.get("/api", welcome);
+app.get("/api", api);
+app.use('/api/users', userRoutes);
+
 
 app.listen(port, (err) => {
     if (err) {
